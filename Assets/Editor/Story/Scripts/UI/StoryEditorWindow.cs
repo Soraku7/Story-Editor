@@ -9,6 +9,8 @@ namespace Editor.Story
     {
         private readonly string defaultFileName = "StoryName";
         
+        private StoryGraphView graphView;
+        
         private Toolbar toolbar;
         private static TextField tfdFielName;
         private Button btnSave;
@@ -31,6 +33,7 @@ namespace Editor.Story
         {
             AddToolbar();
 
+            AddGraphView();
         }
 
         //添加工具栏
@@ -57,6 +60,16 @@ namespace Editor.Story
             
             //工具栏加入到窗口
             rootVisualElement.Add(toolbar);
+        }
+
+        private void AddGraphView()
+        {
+            graphView = new StoryGraphView(this);
+            
+            //将尺寸拉至与窗口相同
+            graphView.StretchToParentSize();
+            //将视图放入窗口中
+            rootVisualElement.Insert(0, graphView);
         }
     }
 }
