@@ -1,0 +1,12 @@
+/*网格背景*/
+GridBackground{
+    --grid-background-color: var(--color-dark-gray-0);
+    --line-color: var(--color-dark-gray-1);
+    --think-line-color: var(--color-dark-gray-3);
+    --space: var(--metrics-20);
+}
+
+StoryGraphView{
+    width: 100%;
+    height: 100%;
+}

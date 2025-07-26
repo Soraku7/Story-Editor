@@ -1,4 +1,5 @@
 using UnityEditor.Experimental.GraphView;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Editor.Story
@@ -15,6 +16,18 @@ namespace Editor.Story
             
             AddGridBackground();
             AddManipulators();
+            AddDefaultNode();
+        }
+        
+        public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
+        {
+            base.BuildContextualMenu(evt);
+            
+            //添加右键菜单
+            evt.menu.AppendAction("添加默认节点", (a) =>
+            {
+                AddElement(CreateNode("默认节点", Vector2.zero));
+            });
         }
         
         //添加网格背景
@@ -34,7 +47,8 @@ namespace Editor.Story
             //添加视图缩放
             // this.AddManipulators(new ContentZoomer());
             //滚轮缩放
-            SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
+            SetupZoom(0.2f , 4.0f);
+            // SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
             //graphview窗口内容的拖动
             this.AddManipulator(new ContentDragger());
             //选中Node移动功能
@@ -43,5 +57,22 @@ namespace Editor.Story
             this.AddManipulator(new RectangleSelector());
         }
         
+        //创建节点
+        public BaseNode CreateNode(string title, Vector2 position)
+        {
+            //创建节点
+            BaseNode node = new BaseNode();
+            //初始化节点
+            node.Init(this, title, position);
+            node.Draw();
+            return node;
+        }
+
+        //添加默认节点
+        public void AddDefaultNode()
+        {
+            AddElement(CreateNode("默认节点", Vector2.zero));
+        }
+
     }
 }

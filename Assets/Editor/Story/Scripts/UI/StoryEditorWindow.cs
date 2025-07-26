@@ -8,6 +8,9 @@ namespace Editor.Story
     public class StoryEditorWindow : EditorWindow
     {
         private readonly string defaultFileName = "StoryName";
+        private readonly string variablePath ="Assets/Editor/Story/Style Sheets/Variables.uss";
+        private readonly string toolbarStylePath = "Assets/Editor/Story/Style Sheets/ToolbarStyle.uss";
+        private readonly string graphViewStylePath = "Assets/Editor/Story/Style Sheets/GraphViewStyle.uss";
         
         private StoryGraphView graphView;
         
@@ -34,6 +37,8 @@ namespace Editor.Story
             AddToolbar();
 
             AddGraphView();
+            
+            AddStyles();
         }
 
         //添加工具栏
@@ -66,10 +71,20 @@ namespace Editor.Story
         {
             graphView = new StoryGraphView(this);
             
-            //将尺寸拉至与窗口相同
-            graphView.StretchToParentSize();
-            //将视图放入窗口中
-            rootVisualElement.Insert(0, graphView);
+            // //将尺寸拉至与窗口相同
+            // graphView.StretchToParentSize();
+            // //将视图放入窗口中
+            // rootVisualElement.Insert(0, graphView);
+            rootVisualElement.Add(graphView);
+        }
+
+        //添加样式文件
+        private void AddStyles()
+        {
+            //引用变量样式文件
+            rootVisualElement.AddStyleSheet(variablePath);
+            toolbar.AddStyleSheet(toolbarStylePath);
+            graphView.AddStyleSheet(graphViewStylePath);
         }
     }
 }

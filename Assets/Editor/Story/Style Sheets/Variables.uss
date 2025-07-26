@@ -1,0 +1,26 @@
+:root{
+    /*颜色*/
+    --color-dark-gray-0: #111111;
+    --color-dark-gray-1: #222222;
+    --color-dark-gray-2: #333333;
+    --color-dark-gray-3: #444444;
+    --color-yellow: #F2C94C;
+    --color-blue: #2F80ED;
+    
+    /*数值(无单位)*/
+    --metrics-0: 0;
+    --metrics-20: 20;
+    
+    /*数值(px)*/
+    --metrics-2px: 2px;
+    --metrics-4px: 4px;
+    --metrics-6px: 6px;
+    --metrics-8px: 8px;
+    --metrics-10px: 10px;
+    --metrics-14px: 14px;
+    --metrics-20px: 20px;
+    --metrics-30px: 30px;
+    --metrics-32px: 32px;
+    --metrics-40px: 40px;
+    --metrics-120px: 120px;
+}
