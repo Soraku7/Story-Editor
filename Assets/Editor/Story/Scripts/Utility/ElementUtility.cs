@@ -1,4 +1,5 @@
 using System;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine.UIElements;
 
 namespace Editor.Story
@@ -74,6 +75,16 @@ namespace Editor.Story
             TextField textArea = CreateTextField(value, label, onValueChanged);
             textArea.multiline = true;
             return textArea;
+        }
+
+        //创建端口
+        public static Port CreatePort(this BaseNode node, string portName = "",
+            Orientation orientation = Orientation.Horizontal, Direction direction = Direction.Output,
+            Port.Capacity capacity = Port.Capacity.Single)
+        {
+            Port port = node.InstantiatePort(orientation, direction, capacity, typeof(bool));
+            port.portName = portName;
+            return port;
         }
     }
 }
