@@ -9,6 +9,7 @@ namespace Editor.Story
     {
         //关联窗口
         private StoryEditorWindow storyEditorWindow;
+        private NodeCreationBox nodeCreationBox;
 
         public StoryGraphView(StoryEditorWindow window)
         {
@@ -18,51 +19,29 @@ namespace Editor.Story
             AddGridBackground();
             AddManipulators();
             AddDefaultNode();
+            AddNodeCreationBox();
+            
+            OnOpenNodeCreationBox();
         }
         
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
             base.BuildContextualMenu(evt);
-            Vector2 localMousePosition = this.contentViewContainer.WorldToLocal(evt.mousePosition);
             //添加右键菜单
-            evt.menu.AppendAction("添加默认节点", (a) =>
+            evt.menu.AppendAction("添加节点", (action) =>
             {
-               CreateNode("默认节点", NodeType.Base , localMousePosition);
-            });
-            evt.menu.AppendAction("添加单进单出节点", (a) =>
-            {
-                CreateNode("1t1", NodeType.SingleInSingleOut ,localMousePosition);
-            });
-            evt.menu.AppendAction("添加单进多出节点", (a) =>
-            {
-                CreateNode("1tm", NodeType.SingleInMultiOut , localMousePosition);
-            });
-            evt.menu.AppendAction("添加单进0出节点", (a) =>
-            {
-                CreateNode("1t0", NodeType.SingleInZeroOut , localMousePosition);
-            });
-            evt.menu.AppendAction("添加0进1出节点", (a) =>
-            {
-                CreateNode("0t1", NodeType.ZeroInSingleOut , localMousePosition);
+                //获取光标位置
+               Vector2 screenMousePosition = action.eventInfo.mousePosition + new Vector2(50 , 35);
+               
+               //出发请求事件
+               nodeCreationRequest(new NodeCreationContext()
+               {
+                   screenMousePosition = screenMousePosition,
+                   index = -1
+               });
             });
             
             
-            evt.menu.AppendAction("添加对话节点", (a) =>
-            {
-                CreateNode("对话节点", NodeType.Dialogue , localMousePosition);
-            });
-            evt.menu.AppendAction("添加分支节点", (a) =>
-            {
-                CreateNode("分支节点", NodeType.Branch , localMousePosition);
-            });
-            evt.menu.AppendAction("添加开始节点", (a) =>
-            {
-                CreateNode("开始节点", NodeType.Branch , localMousePosition);
-            });
-            evt.menu.AppendAction("添加结束节点", (a) =>
-            {
-                CreateNode("结束节点", NodeType.End , localMousePosition);
-            });
             
         }
         
@@ -70,7 +49,7 @@ namespace Editor.Story
         private void AddGridBackground()
         {
             //创建网格背景
-            GridBackground gridBackground = new GridBackground();
+            GridBackground gridBackground = new();
             //设置网格背景拉伸与视图相同
             gridBackground.StretchToParentSize();
             //添加到GraphView
@@ -83,7 +62,7 @@ namespace Editor.Story
             //添加视图缩放
             // this.AddManipulators(new ContentZoomer());
             //滚轮缩放
-            SetupZoom(0.2f , 4.0f);
+            SetupZoom(0.2f , 2.0f);
             // SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
             //graphview窗口内容的拖动
             this.AddManipulator(new ContentDragger());
@@ -113,8 +92,37 @@ namespace Editor.Story
         //添加默认节点
         public void AddDefaultNode()
         {
-           CreateNode("节点" , NodeType.Base , Vector2.zero);
+           CreateNode("开始" , NodeType.Start , Vector2.zero);
+           CreateNode("结束" , NodeType.End , new Vector2(500, 0));
+        }
+        
+        //添加节点创建框
+        private void AddNodeCreationBox()
+        {
+            nodeCreationBox = ScriptableObject.CreateInstance<NodeCreationBox>();
+            nodeCreationBox.Init(this);
         }
 
+        //打开添加节点对话框
+        private void OnOpenNodeCreationBox()
+        {
+            //定义请求事件
+            nodeCreationRequest = context =>
+            {
+                //打开节点创建框
+                SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), nodeCreationBox);
+            };
+        }
+        
+        public Vector2 GetLocalMousePosition(Vector2 screenMousePosition)
+        {
+            //将光标的屏幕坐标转换为窗口内的坐标
+            Vector2 windowMousePosition = screenMousePosition - storyEditorWindow.position.position;
+
+            //将光标在当前窗口内的坐标转换为节点视图内的坐标
+            Vector2 localMousePosition = contentViewContainer.WorldToLocal(windowMousePosition);
+            
+            return localMousePosition;
+        }
     }
 }
