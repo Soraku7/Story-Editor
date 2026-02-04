@@ -1,12 +1,225 @@
 /*网格背景*/
-GridBackground{
+GridBackground {
     --grid-background-color: var(--color-dark-gray-0);
     --line-color: var(--color-dark-gray-1);
     --think-line-color: var(--color-dark-gray-3);
     --space: var(--metrics-20);
 }
 
-StoryGraphView{
+StoryGraphView {
     width: 100%;
     height: 100%;
+}
+
+/* --布局容器*/
+/*节点主容器*/
+.node__main-container {
+    min-width: var(--metrics-200px);
+    background-color: var(--color-dark-gray-3);
+}
+
+.node__main-container-small {
+    min-width: var(--metrics-120px);
+    background-color: var(--color-dark-gray-3);
+}
+
+/*节点标题容器*/
+.node__input-container {
+
+}
+
+/*节点输入容器*/
+.node__input-container {
+
+}
+
+/*节点输出容器*/
+.node__output-container {
+}
+
+/*节点自定义数据容器*/
+.node__custom-data-container {
+    padding: var(--metrics-8px);
+}
+
+/*行容器*/
+.row-container {
+    flex-grow: 1000;
+    max-width: var(--mertics-320px);
+}
+
+/*行容器 > 左侧中间的元素*/
+.row-container > .row-item__left-center {
+    margin-top: var(--metrics-2px);
+    margin-right: var(--metrics-4px);
+    margin-bottom: var(--metrics-2px);
+    margin-left: var(--metrics-0);
+}
+
+/*行容器 > 右侧中间的元素*/
+.row-container > .row-item__left-center {
+    margin-top: var(--metrics-2px);
+    margin-right: var(--metrics-4px);
+    margin-bottom: var(--metrics-2px);
+    margin-left: var(--metrics-0);
+}
+
+/*列容器*/
+.col-container {
+}
+
+/*列容器 > 上侧中间的元素*/
+.col-container > .col-item__top-center {
+    margin-top: var(--metrics-0);
+    margin-right: var(--metrics-0);
+    margin-bottom: var(--metrics-4px);
+    margin-left: var(--metrics-0);
+}
+
+/*列容器 > 最下侧元素*/
+.col-container > .col-item__buttom {
+    margin-top: var(--metrics-0);
+    margin-right: var(--metrics-0);
+    margin-bottom: var(--metrics-0);
+    margin-left: var(--metrics-0);
+}
+
+/*交互元素*/
+
+/*折叠组*/
+Foldout {
+
+}
+
+/*折叠组 > 子项*/
+Foldout > .foldout-item {
+    margin: var(--metrics-0);
+    margin-top: var(--metrics-4px);
+}
+
+/*折叠组 > 折叠框Unity文本元素*/
+.unity-toggle__text {
+    margin-left: var(--metrics-0);
+}
+
+/*按钮*/
+Button {
+    min-height: var(--metrics-24px);
+    background-color: var(--color-dark-gray-3);
+    border-color: var(--color-dark-gray-2);
+}
+
+/*按钮(悬停时)*/
+Button:hover {
+    background-color: var(--color-dark-gray-1);
+}
+
+/*按钮(按下时)*/
+Button:active {
+    background-color: var(--color-dark-gray-0);
+    color: var(--color-yellow);
+}
+
+/*输入字段*/
+
+/*文本字段*/
+.textfield {
+
+}
+
+/*文本字段 > Unity文本输入框*/
+.textfield > .unity-text-field__input
+    /*文本字段 > Unity整数输入框*/
+.textfield > .unity-integer-field__input {
+    min-width: var(--metrics-40px);
+    background-color: var(--color-dark-gray-2);
+    border-color: var(--color-dark-gray-1);
+    border-radius: var(--metrics-4px);
+    /*white-space: pre-wrap;*/
+}
+
+/*隐藏文本字段 > Unity文本输入框*/
+.textfield__hidden > .unity-text-field__input {
+    background-color: transparent;
+    border-color: transparent;
+}
+
+/*隐藏文本字段(聚焦时) > Unity文本输入框*/
+.textfield__hidden:focus > .unity-text-field__input {
+    background-color: var(--color-dark-gray-1);
+    border-color: var(--color-yellow);
+}
+
+/*引用文本字段 > Unity文本输入框*/
+.textfield__quote > .unity-text-field__input,
+.textfield__quote > .unity-integer-field__input {
+    padding: var(--metrics-6px);
+    background-color: var(--color-dark-gray-1);
+    border-color: transparent;
+    border-left-color: var(--color-dark-gray-2);
+    border-left-width: var(--metrics-4px);
+}
+
+/*引用文本字段(悬停时) > Unity文本输入框*/
+.textfield__quote:hover > .unity-text-field__input,
+.textfield__quote:hover > .unity-integer-field_input {
+    background-color: var(--color-dark-gray-1);
+}
+
+/*引用文本字段(聚焦时) > Unity文本输入框*/
+.textfield__quote:focus > .unity-text-field__input,
+.textfield__quote:focus > .unity-integer-field_input {
+    background-color: var(--color-dark-gray-1);
+    border-color: var(--color-yellow);
+}
+
+/*节点标题文本字段(聚焦时) > Unity文本输入框*/
+.textfield__node-title:focus > .unity-text-field__input {
+    max-width: var(--mertics-320px);
+    margin: var(--metrics-4px);
+    margin-left: var(--metrics-0);
+    padding: var(--metrics-2px);
+}
+
+/*节点标题文本字段 > Unity文本输入框 > 文本元素*/
+.textfield__node-title > .unity-text-field__input > TextElement {
+    font-size: var(--metrics-14px);
+}
+
+/*节点输出端口选项文本 > Unity文本输入框 >*/
+.textfield__node-output-port > .unity-text-field__input {
+    height: var(--metrics-24px);
+    min-width: var(--metrics-40px);
+    max-width: var(--metrics-240px);
+    margin: var(--metrics-4px);
+    margin-right: var(--metrics-0);
+    padding: var(--metrics-4px);
+}
+
+/*错误边框*/
+.error-border {
+    border-color: var(--color-red);
+    border-width: var(--metrics-2px);
+    border-radius: 4px 4px 0 0;
+}
+
+/*错误背景*/
+.error-bg {
+    background-color: var(--color-red);
+}
+
+/*帮助文本*/
+.help-text {
+    color: var(--color-red);
+    -unity-text-align: middle-center;
+}
+
+/*缩进行*/
+.indent {
+    margin-left: var(--metrics-8px);
+}
+
+/*全宽*/
+.full-width {
+
 }

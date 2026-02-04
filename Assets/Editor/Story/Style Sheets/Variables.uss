@@ -1,17 +1,25 @@
-:root{
+:root {
     /*颜色*/
     --color-dark-gray-0: #111111;
     --color-dark-gray-1: #222222;
     --color-dark-gray-2: #333333;
     --color-dark-gray-3: #444444;
+    --color-light-gray-0: #eeeeee;
+    --color-light-gray-1: #dddddd;
+    --color-light-gray-2: #cccccc;
+    --color-light-gray-3: #bbbbbb;
+    --color-light-gray-4: #aaaaaa;
     --color-yellow: #F2C94C;
     --color-blue: #2F80ED;
-    
+    --color-red: #CC2222;
+
     /*数值(无单位)*/
     --metrics-0: 0;
+    --metrics-1: 1;
     --metrics-20: 20;
-    
+
     /*数值(px)*/
+    --metrics-1px: 1px;
     --metrics-2px: 2px;
     --metrics-4px: 4px;
     --metrics-6px: 6px;
@@ -19,8 +27,14 @@
     --metrics-10px: 10px;
     --metrics-14px: 14px;
     --metrics-20px: 20px;
+    --metrics-24px: 24px;
     --metrics-30px: 30px;
     --metrics-32px: 32px;
     --metrics-40px: 40px;
+    --metrics-60px: 60px;
+    --metrics-100px: 100px;
     --metrics-120px: 120px;
+    --metrics-200px: 200px;
+    --metrics-240px: 240px;
+    --mertics-320px: 320px;
 }
