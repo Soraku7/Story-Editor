@@ -15,15 +15,15 @@ namespace Editor.Story
         {
             //实例化时绑定窗口
             storyEditorWindow = window;
-            
+
             AddGridBackground();
             AddManipulators();
             AddDefaultNode();
             AddNodeCreationBox();
-            
+
             OnOpenNodeCreationBox();
         }
-        
+
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
             base.BuildContextualMenu(evt);
@@ -31,20 +31,16 @@ namespace Editor.Story
             evt.menu.AppendAction("添加节点", (action) =>
             {
                 //获取光标位置
-               Vector2 screenMousePosition = action.eventInfo.mousePosition + new Vector2(50 , 35);
-               
-               //出发请求事件
-               nodeCreationRequest(new NodeCreationContext()
-               {
-                   screenMousePosition = screenMousePosition,
-                   index = -1
-               });
+                Vector2 screenMousePosition = action.eventInfo.mousePosition + new Vector2(50 , 35);
+                //出发请求事件
+                nodeCreationRequest(new NodeCreationContext()
+                {
+                    screenMousePosition = screenMousePosition,
+                    index = -1
+                });
             });
-            
-            
-            
         }
-        
+
         //添加网格背景
         private void AddGridBackground()
         {
@@ -62,7 +58,7 @@ namespace Editor.Story
             //添加视图缩放
             // this.AddManipulators(new ContentZoomer());
             //滚轮缩放
-            SetupZoom(0.2f , 2.0f);
+            SetupZoom(0.2f, 2.0f);
             // SetupZoom(ContentZoomer.DefaultMinScale, ContentZoomer.DefaultMaxScale);
             //graphview窗口内容的拖动
             this.AddManipulator(new ContentDragger());
@@ -71,13 +67,13 @@ namespace Editor.Story
             //多个node框选功能
             this.AddManipulator(new RectangleSelector());
         }
-        
+
         //创建节点
-        public BaseNode CreateNode(string title, NodeType type , Vector2 position)
+        public BaseNode CreateNode(string title, NodeType type, Vector2 position)
         {
             //获取节点类型
             Type nodeType = Type.GetType("Editor.Story." + type + "Node");
-            
+
             Debug.Log(type);
             //创建节点
             BaseNode node = Activator.CreateInstance(nodeType) as BaseNode;
@@ -85,17 +81,17 @@ namespace Editor.Story
             node.Init(this, title, position);
             node.Draw();
             AddElement(node);
-            
+
             return node;
         }
 
         //添加默认节点
         public void AddDefaultNode()
         {
-           CreateNode("开始" , NodeType.Start , Vector2.zero);
-           CreateNode("结束" , NodeType.End , new Vector2(500, 0));
+            CreateNode("开始", NodeType.Start, Vector2.zero);
+            CreateNode("结束", NodeType.End, new Vector2(500, 0));
         }
-        
+
         //添加节点创建框
         private void AddNodeCreationBox()
         {
@@ -113,7 +109,7 @@ namespace Editor.Story
                 SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), nodeCreationBox);
             };
         }
-        
+
         public Vector2 GetLocalMousePosition(Vector2 screenMousePosition)
         {
             //将光标的屏幕坐标转换为窗口内的坐标
@@ -121,7 +117,7 @@ namespace Editor.Story
 
             //将光标在当前窗口内的坐标转换为节点视图内的坐标
             Vector2 localMousePosition = contentViewContainer.WorldToLocal(windowMousePosition);
-            
+
             return localMousePosition;
         }
     }

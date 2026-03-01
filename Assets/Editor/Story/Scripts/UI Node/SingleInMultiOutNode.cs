@@ -38,6 +38,8 @@ namespace Editor.Story
             
             extensionContainer.Add(btnAdd);
             
+            btnAdd.AddClasses("foldout-item");
+            
             RefreshExpandedState();
         }
 
@@ -70,6 +72,10 @@ namespace Editor.Story
             
             outputPort.Add(btnDelete);
             outputPort.Add(tfdText);
+
+            btnDelete.AddClasses("row-item__right");
+            
+            tfdText.AddClasses("textfield" , "textfield__node-outport" , "row-item__hidden");
             
             return outputPort;
         }

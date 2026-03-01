@@ -64,6 +64,13 @@ namespace Editor.Story
                 foldout.Add(lineElement);
             }
             
+            //添加USS
+            customDataContainer.AddClasses("node__custom-data-container");
+            roleInfoRowContainer.AddClasses("row-container", "foldout-item");
+            roleInfoColContainer.AddClasses("col-container", "full-width");
+            tfdRoleName.AddClasses("col-item__top-center" , "textfield" , "textfield__quote");
+            btnAdd.AddClasses("foldout-item");
+            
             //刷新
             RefreshExpandedState();
         }
@@ -97,6 +104,10 @@ namespace Editor.Story
             
             lineElement.Add(tfdSentence);
             lineElement.Add(btnDelete);
+            
+            lineElement.AddClasses("row-container", "foldout-item");
+            tfdSentence.AddClasses("textfield" , "textfield__quote" , "row-item__left-center");
+            btnDelete.AddClasses("row-item__right");
             
             return lineElement;
         }

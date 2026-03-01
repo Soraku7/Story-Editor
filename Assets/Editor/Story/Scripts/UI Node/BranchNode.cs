@@ -91,6 +91,11 @@ namespace Editor.Story
             lineElement.Add(btnDelete);
             choiceContainer.Add(lineElement);
             
+            choiceContainer.AddClasses("foldout-item");
+            lineElement.AddClasses("row-container");
+            tfdChoice.AddClasses("textfield" , "textfield__quote" , "row-item__left-center");
+            btnDelete.AddClasses("row-item__right");
+            
             return choiceContainer;
         }
 
