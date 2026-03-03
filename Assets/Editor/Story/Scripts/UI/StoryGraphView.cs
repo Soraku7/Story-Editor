@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -39,6 +41,15 @@ namespace Editor.Story
                     index = -1
                 });
             });
+        }
+
+        public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
+        {
+            List<Port> result = ports.ToList();
+
+            result = result.Where(endport => endport.direction != startPort.direction && endport.node != startPort.node).ToList();
+            
+            return result;
         }
 
         //添加网格背景
@@ -83,6 +94,13 @@ namespace Editor.Story
             AddElement(node);
 
             return node;
+        }
+
+        public Edge CreateEdge(Port lastOutput , Port nextInput)
+        {
+            Edge edge = lastOutput.ConnectTo(nextInput);
+            AddElement(edge);
+            return edge;
         }
 
         //添加默认节点
