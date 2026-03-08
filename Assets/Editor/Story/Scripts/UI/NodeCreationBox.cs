@@ -75,7 +75,7 @@ namespace Editor.Story
         //当点击某个对话框
         public bool OnSelectEntry(SearchTreeEntry SearchTreeEntry, SearchWindowContext context)
         {
-            Vector2 localMousePosition = graphView.GetLocalMousePosition(context.screenMousePosition);
+            Vector2 localMousePosition = graphView.GetLocalMousePosition(context.screenMousePosition, true);
 
             NodeType type = (NodeType)SearchTreeEntry.userData;
             switch (type)

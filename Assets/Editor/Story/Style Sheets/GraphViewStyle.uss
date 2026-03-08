@@ -196,6 +196,23 @@ Button:active {
     padding: var(--metrics-4px);
 }
 
+/*分组头部容器*/
+.group__header-container{
+    
+}
+
+/*分组头部容器 > 标签*/
+.group__header-container > #titleContainer > .unity-label{
+    min-height: 32px;
+}
+
+/*分组头部容器 > 文本字段输入框*/
+.group__header-container > #titleContainer > .unity-text-field > .unity-text-field__input{
+    background-color: var(--color-dark-gray-1);
+    font-size: var(--metrics-20px);
+    -unity-text-align: middle-center;
+}
+
 /*错误边框*/
 .error-border {
     border-color: var(--color-red);

@@ -33,7 +33,7 @@ namespace Editor.Story
             evt.menu.AppendAction("添加节点", (action) =>
             {
                 //获取光标位置
-                Vector2 screenMousePosition = action.eventInfo.mousePosition + new Vector2(50 , 35);
+                Vector2 screenMousePosition = action.eventInfo.mousePosition + new Vector2(50, 35);
                 //出发请求事件
                 nodeCreationRequest(new NodeCreationContext()
                 {
@@ -41,6 +41,8 @@ namespace Editor.Story
                     index = -1
                 });
             });
+
+            evt.menu.AppendAction("添加分组", (action) => { CreateGroup("分组", GetLocalMousePosition(action.eventInfo.localMousePosition)); });
         }
 
         public override List<Port> GetCompatiblePorts(Port startPort, NodeAdapter nodeAdapter)
@@ -48,7 +50,7 @@ namespace Editor.Story
             List<Port> result = ports.ToList();
 
             result = result.Where(endport => endport.direction != startPort.direction && endport.node != startPort.node).ToList();
-            
+
             return result;
         }
 
@@ -96,11 +98,31 @@ namespace Editor.Story
             return node;
         }
 
-        public Edge CreateEdge(Port lastOutput , Port nextInput)
+        public Edge CreateEdge(Port lastOutput, Port nextInput)
         {
             Edge edge = lastOutput.ConnectTo(nextInput);
             AddElement(edge);
             return edge;
+        }
+
+        public BaseGroup CreateGroup(string title, Vector2 position, bool moveSelectedNodes = true)
+        {
+            BaseGroup group = new(title, position);
+            AddElement(group);
+
+            if (moveSelectedNodes)
+            {
+                //如果选中了多个节点然后创建分组，则将这些节点放入新的分组
+                foreach (GraphElement item in selection)
+                {
+                    if (item is BaseNode baseNode)
+                    {
+                        group.AddElement(baseNode);
+                    }
+                }
+            }
+
+            return group;
         }
 
         //添加默认节点
@@ -128,10 +150,19 @@ namespace Editor.Story
             };
         }
 
-        public Vector2 GetLocalMousePosition(Vector2 screenMousePosition)
+        public Vector2 GetLocalMousePosition(Vector2 screenMousePosition, bool isNodeCreationBox = false)
         {
-            //将光标的屏幕坐标转换为窗口内的坐标
-            Vector2 windowMousePosition = screenMousePosition - storyEditorWindow.position.position;
+            Vector2 windowMousePosition;
+            windowMousePosition = screenMousePosition - storyEditorWindow.position.position;
+            if (isNodeCreationBox)
+            {
+                //将光标的屏幕坐标转换为窗口内的坐标
+                windowMousePosition = screenMousePosition - storyEditorWindow.position.position;
+            }
+            else
+            {
+                windowMousePosition = screenMousePosition;
+            }
 
             //将光标在当前窗口内的坐标转换为节点视图内的坐标
             Vector2 localMousePosition = contentViewContainer.WorldToLocal(windowMousePosition);
