@@ -1,4 +1,5 @@
-﻿using UnityEditor.Experimental.GraphView;
+﻿using Editor.Story;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class BaseGroup : Group
@@ -15,5 +16,17 @@ public class BaseGroup : Group
         SetPosition(new Rect(position, Vector2.zero));
         
         headerContainer.AddToClassList("group__header-container");
+    }
+
+    public GroupData GetGroupData()
+    {
+        GroupData groupData = new GroupData()
+        {
+            GUID = ID,
+            Title = title,
+            Position = GetPosition().position
+        };
+
+        return groupData;
     }
 }

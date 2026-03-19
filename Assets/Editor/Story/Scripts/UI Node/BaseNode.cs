@@ -25,6 +25,9 @@ namespace Editor.Story
         //数据列表
         public List<ChoiceData> ChoiceDatas { get; set; }
 
+        //所属分组
+        public BaseGroup Group { get; set; }
+
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
         {
             evt.menu.AppendAction("清除输入连接",
@@ -230,6 +233,24 @@ namespace Editor.Story
             {
                 graphView.DeleteElements(port.connections.ToList());
             }
+        }
+        
+        public NodeData GetNodeData()
+        {
+            List<ChoiceData> choiceChoices = DataUtility.CloneChoiceChoices(ChoiceDatas);
+            
+            NodeData nodeData = new NodeData()
+            {
+                GUID = GUID,
+                Type = Type,
+                Position = GetPosition().position,
+                Title = Title,
+                Note = Note,
+                ChoiceDatas = choiceChoices,
+                GroupID = Group?.ID
+            };
+            
+            return nodeData;
         }
     }
 }

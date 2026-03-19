@@ -13,6 +13,38 @@ namespace Editor.Story
         private StoryEditorWindow storyEditorWindow;
         private NodeCreationBox nodeCreationBox;
 
+        public List<BaseGroup> Groups
+        {
+            get
+            {
+                List<BaseGroup> groups = new List<BaseGroup>();
+                graphElements.ForEach(element =>
+                {
+                    if (element is BaseGroup group)
+                    {
+                        groups.Add(group);
+                    }
+                });
+                return groups;
+            }
+        }
+
+        public List<BaseNode> Nodes
+        {
+            get
+            {
+                List<BaseNode> nodes = new List<BaseNode>();
+                graphElements.ForEach(element =>
+                {
+                    if (element is BaseNode node)
+                    {
+                        nodes.Add(node);
+                    }
+                });
+                return nodes;
+            }
+        }
+
         public StoryGraphView(StoryEditorWindow window)
         {
             //实例化时绑定窗口
@@ -153,7 +185,6 @@ namespace Editor.Story
         public Vector2 GetLocalMousePosition(Vector2 screenMousePosition, bool isNodeCreationBox = false)
         {
             Vector2 windowMousePosition;
-            windowMousePosition = screenMousePosition - storyEditorWindow.position.position;
             if (isNodeCreationBox)
             {
                 //将光标的屏幕坐标转换为窗口内的坐标
