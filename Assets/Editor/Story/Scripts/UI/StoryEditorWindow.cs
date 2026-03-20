@@ -95,8 +95,8 @@ namespace Editor.Story
         {
             graphView = new StoryGraphView(this);
 
-            // //将尺寸拉至与窗口相同
-            // graphView.StretchToParentSize();
+            //将尺寸拉至与窗口相同
+            graphView.StretchToParentSize();
             // //将视图放入窗口中
             // rootVisualElement.Insert(0, graphView);
             rootVisualElement.Add(graphView);
