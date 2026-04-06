@@ -114,7 +114,7 @@ namespace Editor.Story
         }
 
         //创建节点
-        public BaseNode CreateNode(string title, NodeType type, Vector2 position)
+        public BaseNode CreateNode(string title, NodeType type, Vector2 position, Group group = null, bool shouldDraw = true)
         {
             //获取节点类型
             Type nodeType = Type.GetType("Editor.Story." + type + "Node");
@@ -124,8 +124,20 @@ namespace Editor.Story
             BaseNode node = Activator.CreateInstance(nodeType) as BaseNode;
             //初始化节点
             node.Init(this, title, position);
-            node.Draw();
-            AddElement(node);
+
+            if (shouldDraw)
+            {
+                node.Draw();
+            }
+
+            if (group == null)
+            {
+                AddElement(node);
+            }
+            else
+            {
+                group.AddElement(node);
+            }
 
             return node;
         }
@@ -199,6 +211,11 @@ namespace Editor.Story
             Vector2 localMousePosition = contentViewContainer.WorldToLocal(windowMousePosition);
 
             return localMousePosition;
+        }
+
+        public void ClearGraph()
+        {
+            graphElements.ForEach(element => RemoveElement(element));
         }
     }
 }

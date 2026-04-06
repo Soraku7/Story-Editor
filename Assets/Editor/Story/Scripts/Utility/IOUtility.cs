@@ -39,7 +39,7 @@ namespace Editor.Story
         public static T LoadAsset<T>(string path, string assetName) where T : ScriptableObject
         {
             string fullPath = $"{path}/{assetName}.asset";
-            return AssetDatabase.LoadAssetAtPath<T>(path);
+            return AssetDatabase.LoadAssetAtPath<T>(fullPath);
         }
         
         public static T LoadAsset<T>(string fullPath) where T : ScriptableObject

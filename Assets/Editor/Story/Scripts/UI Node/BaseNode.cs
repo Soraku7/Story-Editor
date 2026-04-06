@@ -17,10 +17,20 @@ namespace Editor.Story
         protected Port output;
 
         // 节点标题
-        public string GUID { get; private set; }
+        public string GUID { get; set; }
         public NodeType Type { get; set; }
         public string Title { get; private set; }
-        public string Note { get; private set; }
+        public string Note { get; set; }
+
+        public Port Input
+        {
+            get => input;
+        }
+
+        public Port Output
+        {
+            get => output;
+        }
 
         //数据列表
         public List<ChoiceData> ChoiceDatas { get; set; }
@@ -59,7 +69,7 @@ namespace Editor.Story
 
             //设置默认初始属性
             Type = NodeType.Base;
-            GUID = UnityEditor.GUID.Generate().ToString();
+            GUID = UnityEngine.GUID.Generate().ToString();
             Title = title;
             Note = "备注信息";
             ChoiceDatas = new List<ChoiceData>() { new("下个节点") };
@@ -234,11 +244,11 @@ namespace Editor.Story
                 graphView.DeleteElements(port.connections.ToList());
             }
         }
-        
+
         public NodeData GetNodeData()
         {
             List<ChoiceData> choiceChoices = DataUtility.CloneChoiceChoices(ChoiceDatas);
-            
+
             NodeData nodeData = new NodeData()
             {
                 GUID = GUID,
@@ -249,7 +259,7 @@ namespace Editor.Story
                 ChoiceDatas = choiceChoices,
                 GroupID = Group?.ID
             };
-            
+
             return nodeData;
         }
     }

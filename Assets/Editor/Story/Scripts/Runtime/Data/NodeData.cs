@@ -17,7 +17,7 @@ namespace Editor.Story
         [SerializeField] private string groupID;
 
         [SerializeField] private string roleName;
-        [SerializeField] private List<SentenceData> sentenceDatas;
+        [SerializeField] public List<SentenceData> sentenceDatas;
         
         public string GUID { get => guid; set => guid = value; }
         public NodeType Type { get => type; set => type = value; }

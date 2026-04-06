@@ -10,7 +10,7 @@ public class BaseGroup : Group
 
     public BaseGroup(string title, Vector2 position)
     {
-        ID = UnityEditor.GUID.Generate().ToString();
+        ID = UnityEngine.GUID.Generate().ToString();
         this.title = title;
         OldTitle = title;
         SetPosition(new Rect(position, Vector2.zero));
