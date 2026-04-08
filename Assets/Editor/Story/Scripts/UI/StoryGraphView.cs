@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -56,6 +57,11 @@ namespace Editor.Story
             AddNodeCreationBox();
 
             OnOpenNodeCreationBox();
+            OnGraphViewChange();
+            OnElementsReadyDelete();
+            OnGroupElementsAdded();
+            OnGroupElementsRemoved();
+            OnGroupRename();
         }
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
@@ -192,6 +198,171 @@ namespace Editor.Story
                 //打开节点创建框
                 SearchWindow.Open(new SearchWindowContext(context.screenMousePosition), nodeCreationBox);
             };
+        }
+
+        private void OnGraphViewChange()
+        {
+            graphViewChanged = (changes) =>
+            {
+                if (changes.edgesToCreate != null)
+                {
+                    foreach (Edge edge in changes.edgesToCreate)
+                    {
+                        OnCreateEdge(edge);
+                    }
+                }
+
+                if (changes.elementsToRemove != null)
+                {
+                    GraphElement startNodes = changes.elementsToRemove.FirstOrDefault(e => e is StartNode);
+                    changes.elementsToRemove.Remove(startNodes);
+                    List<GraphElement> endNodes = changes.elementsToRemove.Where(e => e is EndNode).ToList();
+
+                    if (endNodes.Count == GetEndNodesAmount())
+                    {
+                        GraphElement lastEndNode = endNodes.Last();
+                        changes.elementsToRemove.Remove(lastEndNode);
+                    }
+                    
+                    foreach (GraphElement element in changes.elementsToRemove)
+                    {
+                        if (element is BaseNode node)
+                        {
+                            OnDeleteNode(node);
+                        }
+
+                        else if (element is BaseGroup group)
+                        {
+                            OnDeleteGroup(group);
+                        }
+                        else if (element is Edge edge)
+                        {
+                            OnDeleteEdge(edge);
+                        }
+                    }
+                }
+
+                if (changes.movedElements != null)
+                {
+                }
+
+                return changes;
+            };
+        }
+
+        private void OnElementsReadyDelete()
+        {
+            deleteSelection = (operationName, askUser) =>
+            {
+                List<ISelectable> readyToDelete = new List<ISelectable>();
+                foreach (GraphElement element in selection)
+                {
+                    if (element is BaseNode node)
+                    {
+                        if (node is StartNode)
+                        {
+                            string str = "不可删除开始节点";
+                            EditorUtility.DisplayDialog("警告", str, "确定");
+                            continue;
+                        }
+
+                        if (node is EndNode)
+                        {
+                            if (GetEndNodesAmount() == 1)
+                            {
+                                string str = "至少要有一个结束节点";
+                                EditorUtility.DisplayDialog("警告", str, "确定");
+                                continue;
+                            }
+                        }
+                        
+                        readyToDelete.Add(node);
+                    }
+                    else if (element is BaseGroup group)
+                    {
+                        readyToDelete.Add(group);
+                    }
+                    else if (element is Edge edge)
+                    {
+                        readyToDelete.Add(edge);
+                    }
+                }
+                
+                selection = readyToDelete;
+                DeleteSelection();
+            };
+        }
+
+        private void OnGroupElementsAdded()
+        {
+            elementsAddedToGroup = (group, elements) =>
+            {
+                BaseGroup baseGroup = (BaseGroup)group;
+                foreach (GraphElement element in elements)
+                {
+                    if (element is BaseNode node)
+                    {
+                        node.Group = baseGroup;
+                    }
+                }
+            };
+        }
+
+        private void OnGroupElementsRemoved()
+        {
+            elementsRemovedFromGroup = (group, elements) =>
+            {
+                BaseGroup baseGroup = (BaseGroup)group;
+                foreach (GraphElement element in elements)
+                {
+                    if (element is BaseNode node)
+                    {
+                        node.Group = null;
+                    }
+                }
+            };
+        }
+
+        private void OnGroupRename()
+        {
+            groupTitleChanged = (group, newTitle) =>
+            {
+                BaseGroup baseGroup = (BaseGroup)group;
+
+                string temp = newTitle;
+                temp.RemoveSpecialCharacters();
+                temp.RemoveWhitespace();
+                baseGroup.title = temp;
+            };
+        }
+
+        private int GetEndNodesAmount()
+        {
+            return graphElements.Where(e => e is EndNode).ToList().Count();
+        }
+
+        private void OnCreateEdge(Edge edge)
+        {
+            BaseNode nextNode = (BaseNode)edge.input.node;
+            ChoiceData choiceData = (ChoiceData)edge.output.userData;
+            choiceData.NextNodeID = nextNode.GUID;
+        }
+
+        private void OnDeleteNode(BaseNode node)
+        {
+            Debug.Log("删除节点");
+        }
+
+        private void OnDeleteGroup(BaseGroup group)
+        {
+            Debug.Log("删除分组");
+        }
+
+        private void OnDeleteEdge(Edge edge)
+        {
+            if (edge.output == null) return;
+            ChoiceData choiceData = (ChoiceData)edge.output.userData;
+            choiceData.NextNodeID = "";
         }
 
         public Vector2 GetLocalMousePosition(Vector2 screenMousePosition, bool isNodeCreationBox = false)

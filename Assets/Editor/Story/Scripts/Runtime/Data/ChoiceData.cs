@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 
+[Serializable]
 public class ChoiceData
 {
     [SerializeField] private string text;
