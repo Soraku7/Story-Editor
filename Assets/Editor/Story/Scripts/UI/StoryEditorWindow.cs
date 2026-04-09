@@ -108,8 +108,8 @@ namespace Editor.Story
             });
             btnSave = ElementUtility.CreateButton("保存", SaveStory);
             btnOpen = ElementUtility.CreateButton("打开", OpenStory);
-            btnNew = ElementUtility.CreateButton("新建", null);
-            btnClear = ElementUtility.CreateButton("清空", null);
+            btnNew = ElementUtility.CreateButton("新建", NewStory);
+            btnClear = ElementUtility.CreateButton("清空", ClearGraphAndCreateDefaultDatas);
             btnMiniMap = ElementUtility.CreateButton("小地图", null);
 
             //创建工具栏
@@ -169,7 +169,7 @@ namespace Editor.Story
             ShowNotification(new GUIContent(message));
         }
 
-        public void OpenStory()
+        private void OpenStory()
         {
             string filePath = EditorUtility.OpenFilePanel("打开故事", storyDatasFolderPath, "asset");
 
@@ -199,6 +199,33 @@ namespace Editor.Story
                 graphView.ClearGraph();
                 LoadDatas(storyData);
                 string message = "打开成功";
+                ShowNotification(new GUIContent(message));
+            }
+        }
+
+        private void NewStory()
+        {
+            string str = "是否新建故事?";
+            if (EditorUtility.DisplayDialog("警告", str, "确定", "取消"))
+            {
+                graphView.ClearGraph();
+                graphView.AddDefaultNode();
+                UpdateFileName(defaultFileName);
+                
+                string message = "创建成功";
+                ShowNotification(new GUIContent(message));
+            }
+        }
+
+        private void ClearGraphAndCreateDefaultDatas()
+        {
+            string str = "是否清空当前故事？";
+            if (EditorUtility.DisplayDialog("警告", str, "确定", "取消"))
+            {
+                graphView.ClearGraph();
+                graphView.AddDefaultNode();
+                
+                string message = "清空成功";
                 ShowNotification(new GUIContent(message));
             }
         }
