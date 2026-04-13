@@ -19,7 +19,7 @@ namespace Editor.Story
         // 节点标题
         public string GUID { get; set; }
         public NodeType Type { get; set; }
-        public string Title { get; private set; }
+        public string Title { get; set; }
         public string Note { get; set; }
 
         public Port Input
@@ -245,7 +245,7 @@ namespace Editor.Story
             }
         }
 
-        public NodeData GetNodeData()
+        public virtual NodeData GetNodeData()
         {
             List<ChoiceData> choiceChoices = DataUtility.CloneChoiceChoices(ChoiceDatas);
 

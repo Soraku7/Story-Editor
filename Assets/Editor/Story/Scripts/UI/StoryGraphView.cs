@@ -62,6 +62,8 @@ namespace Editor.Story
             OnGroupElementsAdded();
             OnGroupElementsRemoved();
             OnGroupRename();
+            OnCopyElement();
+            OnPasteElement();
         }
 
         public override void BuildContextualMenu(ContextualMenuPopulateEvent evt)
@@ -223,7 +225,7 @@ namespace Editor.Story
                         GraphElement lastEndNode = endNodes.Last();
                         changes.elementsToRemove.Remove(lastEndNode);
                     }
-                    
+
                     foreach (GraphElement element in changes.elementsToRemove)
                     {
                         if (element is BaseNode node)
@@ -275,7 +277,7 @@ namespace Editor.Story
                                 continue;
                             }
                         }
-                        
+
                         readyToDelete.Add(node);
                     }
                     else if (element is BaseGroup group)
@@ -287,7 +289,7 @@ namespace Editor.Story
                         readyToDelete.Add(edge);
                     }
                 }
-                
+
                 selection = readyToDelete;
                 DeleteSelection();
             };
@@ -333,6 +335,124 @@ namespace Editor.Story
                 temp.RemoveSpecialCharacters();
                 temp.RemoveWhitespace();
                 baseGroup.title = temp;
+            };
+        }
+
+        private void OnCopyElement()
+        {
+            serializeGraphElements = (elements) =>
+            {
+                CopyDatas copyDatas = new CopyDatas();
+
+                foreach (var element in elements)
+                {
+                    if (element is BaseNode node)
+                    {
+                        if (node.Type == NodeType.Start)
+                        {
+                            continue;
+                        }
+
+                        NodeData nodeData = node.GetNodeData();
+                        copyDatas.nodeDatas.Add(nodeData);
+                    }
+                    else if (element is BaseGroup group)
+                    {
+                        GroupData groupData = group.GetGroupData();
+                        copyDatas.groupDatas.Add(groupData);
+                    }
+                }
+
+                string temp = JsonUtility.ToJson(copyDatas, true);
+
+                return temp;
+            };
+        }
+
+        private void OnPasteElement()
+        {
+            unserializeAndPaste = (operationName, data) =>
+            {
+                ClearSelection();
+
+                CopyDatas copyDatas = JsonUtility.FromJson<CopyDatas>(data);
+
+                Dictionary<GroupData, BaseGroup> pasteGroups = new Dictionary<GroupData, BaseGroup>();
+                Dictionary<NodeData, BaseNode> pasteNodes = new Dictionary<NodeData, BaseNode>();
+
+                foreach (GroupData groupData in copyDatas.groupDatas)
+                {
+                    string newTitle = groupData.Title;
+                    Vector2 newPosition = groupData.Position + new Vector2(50, 50);
+
+                    BaseGroup group = CreateGroup(newTitle, newPosition, false);
+                    pasteGroups.Add(groupData, group);
+                }
+
+                foreach (NodeData nodeData in copyDatas.nodeDatas)
+                {
+                    string newTitle = nodeData.Title;
+                    Vector2 newPosition = nodeData.Position + new Vector2(50, 50);
+                    BaseNode node = CreateNode(newTitle, nodeData.Type, newPosition, null, false);
+
+                    pasteNodes.Add(nodeData, node);
+
+                    node.Note = nodeData.Note;
+                    node.ChoiceDatas = DataUtility.CloneChoiceChoices(nodeData.ChoiceDatas);
+
+                    if (node.Type == NodeType.Dialogue)
+                    {
+                        DialogueNode dialogueNode = node as DialogueNode;
+                        dialogueNode.RoleName = nodeData.RoleName;
+                        dialogueNode.SentenceDatas = DataUtility.CloneSenteenceDatas(nodeData.sentenceDatas);
+                    }
+
+                    node.Draw();
+                }
+
+                foreach (var pasteNode in pasteNodes)
+                {
+                    NodeData nodeData = pasteNode.Key;
+                    BaseNode node = pasteNode.Value;
+
+                    //更新分组信息
+                    if (!string.IsNullOrEmpty(nodeData.GroupID))
+                    {
+                        foreach (GroupData id in pasteGroups.Keys)
+                        {
+                            if (id.GUID == nodeData.GroupID)
+                            {
+                                pasteGroups[id].AddElement(node);
+                                node.Title = nodeData.Title;
+                                break;
+                            }
+                        }
+                    }
+
+                    foreach (Port outputPort in node.outputContainer.Children())
+                    {
+                        ChoiceData choiceData = (ChoiceData)outputPort.userData;
+                        if (string.IsNullOrEmpty(choiceData.NextNodeID))
+                        {
+                            continue;
+                        }
+
+                        NodeData nextNodeData = pasteNodes.Keys.FirstOrDefault(x => x.GUID == choiceData.NextNodeID);
+
+                        if (nextNodeData == null)
+                        {
+                            choiceData.NextNodeID = "";
+                            continue;
+                        }
+                        
+                        BaseNode nextNode = pasteNodes[nextNodeData];
+                        Port nextnodeInputPort = (Port)nextNode.inputContainer.Children().First();
+                        choiceData.NextNodeID = nextNode.GUID;
+                        
+                        CreateEdge(outputPort, nextnodeInputPort);
+                    }
+                    node.RefreshPorts();
+                }
             };
         }
 
